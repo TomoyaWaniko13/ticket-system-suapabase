@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import { createSupabaseClient } from '../../supabase-utils/client';
+import { getSupabaseClient } from '../../supabase-utils/client';
 
 export default function Home() {
   useEffect(() => {
-    const supabase = createSupabaseClient();
+    const supabase = getSupabaseClient();
     supabase.storage.listBuckets().then((result) => console.log('Bucket list', result));
   }, []);
 
