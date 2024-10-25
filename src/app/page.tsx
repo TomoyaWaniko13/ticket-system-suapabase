@@ -1,13 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
-import { getSupabaseClient } from '../../supabase-utils/client';
+import * as React from 'react';
+import { Login } from '@/componentns/Login';
 
-export default function Home() {
-  useEffect(() => {
-    const supabase = getSupabaseClient();
-    supabase.storage.listBuckets().then((result) => console.log('Bucket list', result));
-  }, []);
+type SearchParams = {
+  magicLink?: string;
+};
 
-  return <div>home page</div>;
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
+
+export default function LoginPage({ searchParams }: Props) {
+  // Use React.use to properly handle the Promise
+  const params = React.use(searchParams);
+  const wantsMagicLink = params.magicLink === 'yes';
+
+  return <Login isPasswordLogin={!wantsMagicLink} />;
 }
