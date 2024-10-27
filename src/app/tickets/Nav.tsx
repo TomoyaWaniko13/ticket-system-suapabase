@@ -1,11 +1,20 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { getSupabaseBrowserClient } from '@/supabase-utils/browserClient';
 
+// P.104 Logging out using the frontend
 export default function Nav() {
   const pathname = usePathname();
   const activeProps = { className: 'contrast' };
   const inactiveProps = { className: 'secondary outline' };
+
+  const supabase = getSupabaseBrowserClient();
+
+  const handleLogout = async (event: MouseEvent) => {
+    event.preventDefault();
+    await supabase.auth.signOut();
+  };
 
   return (
     <nav>
@@ -29,7 +38,7 @@ export default function Nav() {
 
       <ul>
         <li>
-          <Link role='button' href='/logout' className='secondary'>
+          <Link role='button' href='/logout' prefetch={false} className='secondary' onClick={handleLogout}>
             Log out
           </Link>
         </li>
