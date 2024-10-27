@@ -1,25 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef } from 'react';
-import { handleLoginAction } from '@/app/actions/actions';
+import { emailPasswordLoginAction } from '@/app/actions/actions';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   isPasswordLogin: boolean;
 };
 
+// P.99 Implementing the login functionality in our app
 export const Login = ({ isPasswordLogin }: Props) => {
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const router = useRouter();
+
+  const handleAction = async (formData: FormData) => {
+    if (!isPasswordLogin) return;
+
+    const result = await emailPasswordLoginAction(formData);
+    if (result.status !== 'success') {
+      alert('Could not sign in');
+      return;
+    }
+
+    router.push('/tickets');
+  };
 
   return (
-    <form
-      action={async (formData) => {
-        formData.append('loginType', isPasswordLogin ? 'password' : 'magicLink');
-        const result = await handleLoginAction(formData);
-        alert(result.message);
-      }}
-    >
+    <form action={handleAction}>
       <article style={{ maxWidth: '480px', margin: 'auto' }}>
         <header>Login</header>
         <fieldset>

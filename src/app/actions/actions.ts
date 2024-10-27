@@ -1,24 +1,20 @@
 'use server';
 
-export async function handleLoginAction(formData: FormData) {
-  console.log(formData);
+import { getSupabaseCookiesUtilClient } from '@/supabase-utils/cookiesUtilClient';
 
-  const isPasswordLogin = formData.get('loginType') === 'password';
+// https://supabase.com/docs/guides/auth/server-side/nextjs?queryGroups=router&router=app
+// P.99 Implementing the login functionality in our app
+export async function emailPasswordLoginAction(formData: FormData) {
+  const supabase = await getSupabaseCookiesUtilClient();
 
-  if (isPasswordLogin) {
-    const email = formData.get('email');
-    const password = formData.get('password');
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-    // ここに実際のパスワードログイン処理を実装
-    console.log('Password login attempt:', { email, password });
-    return { message: 'Password login attempted' };
-  } else {
-    const email = formData.get('email');
+  const result = await supabase.auth.signInWithPassword({ email, password });
 
-    // ここに実際のマジックリンクログイン処理を実装
-    console.log('Magic link login attempt:', { email });
-    return { message: 'Magic' + '' + 'link login attempted' };
-  }
+  if (!result.data?.user) return { message: 'Could not sign in', status: 'error' };
+
+  return { message: 'Signed in', status: 'success' };
 }
 
 export async function createCommentAction(formData: FormData) {

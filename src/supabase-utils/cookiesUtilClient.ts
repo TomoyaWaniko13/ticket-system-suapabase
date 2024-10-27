@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-// Next.jsのサーバーサイドでSupabaseクライアントを初期化する際に、クッキーの取得・設定を適切に処理するためのユーティリティ関数として機能します。
+// Creating Supabase backend clients with App Router
 export const getSupabaseCookiesUtilClient = async () => {
   const cookieStore = await cookies();
 
